@@ -1,4 +1,4 @@
-module github.com/cyeezy08/HostageLVX
+module github.com/leviathan-offsec/HostageLVX
 
 go 1.24.2
 

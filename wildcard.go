@@ -44,7 +44,7 @@ func BodyHash(body string) string {
 func randNonce(n int) string {
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
     b := make([]byte, n)
-    rand.Read(b)
+    _, _ = rand.Read(b)
     for i := range b {
         b[i] = chars[int(b[i])%len(chars)]
     }

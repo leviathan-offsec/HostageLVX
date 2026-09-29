@@ -2,4 +2,6 @@
 
 package main
 
+func init() { enableVT() }
+
 func enableVT() {}
