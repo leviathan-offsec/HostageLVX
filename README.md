@@ -1,7 +1,7 @@
 <div align="center">
 
 <p>
-  <a href="https://codespaces.new/cyeezy08/HostageLVX?quickstart=1">
+  <a href="https://codespaces.new/leviathan-offsec/HostageLVX?quickstart=1">
     <img src="https://github.com/codespaces/badge.svg" alt="Open in Codespaces" width="180" height="32" />
   </a>
   <a href="../../actions/workflows/ci.yml">
@@ -21,7 +21,7 @@
 
 # HOSTAGE LVX
 
-## LEVIATHAN.AC // OFFSEC.LEVIATHAN.AC
+## LEVIATHAN.AC // LEVIATHAN.AC
 
 </div>
 
@@ -31,7 +31,7 @@
   <a href="./scripts/live-demo.sh">
     <img src="https://img.shields.io/badge/Live%20TUI-Demo-00d9ff?style=for-the-badge&logo=terminal&logoColor=black" alt="Live TUI demo" width="180" height="36" />
   </a>
-  <a href="https://github.com/cyeezy08/HostageLVX/releases/latest">
+  <a href="https://github.com/leviathan-offsec/HostageLVX/releases/latest">
     <img src="https://img.shields.io/badge/Download-Binary-111111?style=for-the-badge&logo=github&logoColor=white" alt="Download binary" width="180" height="36" />
   </a>
 </p>
@@ -107,19 +107,19 @@ See [`DISCLAIMER.md`](./DISCLAIMER.md) for the full text.
 ### Option 1 — one-line installer (curl | sh)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/cyeezy08/HostageLVX/main/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/leviathan-offsec/HostageLVX/main/install.sh | sh
 ```
 
 To a specific dir:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/cyeezy08/HostageLVX/main/install.sh | sh -s -- -b /usr/local/bin
+curl -sSL https://raw.githubusercontent.com/leviathan-offsec/HostageLVX/main/install.sh | sh -s -- -b /usr/local/bin
 ```
 
 Pinned version:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/cyeezy08/HostageLVX/main/install.sh | sh -s -- --version v0.3.0
+curl -sSL https://raw.githubusercontent.com/leviathan-offsec/HostageLVX/main/install.sh | sh -s -- --version v0.3.0
 ```
 
 The installer verifies the SHA-256 checksum automatically if present in the release.
@@ -139,7 +139,7 @@ Download from the [Releases](../../releases) page:
 ### Option 3 — `go install`
 
 ```bash
-go install github.com/cyeezy08/HostageLVX@latest
+go install github.com/leviathan-offsec/HostageLVX@latest
 ```
 
 Requires Go 1.22+.
@@ -153,14 +153,14 @@ echo "sub.example.com" | docker run --rm -i ghcr.io/cyeezy08/hostagelvx - @-
 
 ### Option 5 — open in Codespaces
 
-[![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cyeezy08/HostageLVX?quickstart=1)
+[![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/leviathan-offsec/HostageLVX?quickstart=1)
 
 Spin up a full Go dev env in your browser with `subfinder` + `httpx` pre-installed.
 
 ### Option 6 — build from source
 
 ```bash
-git clone https://github.com/cyeezy08/HostageLVX.git
+git clone https://github.com/leviathan-offsec/HostageLVX.git
 cd HostageLVX
 make build
 ```
@@ -364,7 +364,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          curl -sSL https://raw.githubusercontent.com/cyeezy08/HostageLVX/main/install.sh | sh -s -- -b /usr/local/bin
+          curl -sSL https://raw.githubusercontent.com/leviathan-offsec/HostageLVX/main/install.sh | sh -s -- -b /usr/local/bin
           hostage -json -o findings.jsonl @subs.txt
       - uses: actions/upload-artifact@v4
         with:
@@ -382,7 +382,7 @@ jobs:
 
 ### Codespaces
 
-[![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cyeezy08/HostageLVX?quickstart=1)
+[![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/leviathan-offsec/HostageLVX?quickstart=1)
 
 One-click Go dev env with `subfinder`, `httpx`, `dig`, `jq` pre-installed.
 
@@ -478,6 +478,6 @@ MIT — see [`LICENSE`](./LICENSE).
 
 ## Author
 
-Built solo by [@cyeezy08](https://github.com/cyeezy08) — also shipping [Leviathan X](https://leviathan.ac) (defensive attack-surface management) and [OffSec Leviathan](https://offsec.leviathan.ac) (authorized red-team console).
+Built solo by [@cyeezy08](https://github.com/cyeezy08) — also shipping [Leviathan X](https://leviathan.ac) (defensive attack-surface management) and [OffSec Leviathan](https://leviathan.ac) (authorized red-team console).
 
 If `hostage` saved you time on an engagement, star the repo. If it found a real takeover on a bug-bounty program, [drop a ticket in the Leviathan Telegram](https://t.me/leviathanxcloud) — happy to feature writeups.
