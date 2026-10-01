@@ -64,7 +64,7 @@ $ ./scripts/live-demo.sh
   [q] quit
 ```
 
-This is the same rapid-swarm interface shipped with `hostage -demo` and `./scripts/live-demo.sh`, tuned for a brutalist Leviathan operator console.
+This is the same rapid-swarm interface as `./scripts/live-demo.sh`, tuned for a brutalist Leviathan operator console.
 
 This project is built for the same lane as high-end recon tooling, but with a tighter focus on takeovers that matter: noisy results stripped down, valid findings surfaced harder, and the console kept brutal and readable.
 
@@ -179,14 +179,8 @@ make build
 # basic — read from file
 hostage @subs.txt
 
-# live demo dashboard (simulated rapid swarm + takeover verdicts)
-hostage -demo
-
 # recorded demo path
 ./scripts/live-demo.sh
-
-# leviathan.ac branded operator view
-hostage -tui @subs.txt
 
 # fast — 100 concurrent workers
 hostage -t 100 @subs.txt
@@ -197,12 +191,16 @@ hostage -json -o findings.jsonl @subs.txt
 # silent — only print confirmed takeover candidates
 hostage -silent @subs.txt
 
-# custom DNS resolver (forces system mode)
+# custom DNS resolver (forces system mode).
+# A port is accepted and ignored; DNS is always dialled on 53.
 hostage -dns-server 1.1.1.1:53 @subs.txt
 
 # print the fingerprint database and exit
 hostage -fingerprints
 ```
+
+Run `hostage -h` for the full flag list. It is the only list that stays
+correct; the examples here are a subset.
 
 ### Flags
 

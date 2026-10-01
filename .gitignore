@@ -1,6 +1,9 @@
 # Binaries
 hostage
+HostageLVX
 hostage.exe
+/HostageLVX
+/hostage
 hostage-linux-amd64
 hostage-windows-amd64.exe
 hostage-darwin-arm64

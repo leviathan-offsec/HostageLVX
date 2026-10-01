@@ -1,23 +1,17 @@
-# .github/workflows/ci.yml
-# Continuous integration — build, vet, test on every push and PR.
 name: CI
 
 on:
   push:
-    branches: [main, v*]
-  pull_request:
     branches: [main]
-
-permissions:
-  contents: read
+  pull_request:
 
 jobs:
   build:
     name: Build & test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        go-version: ['1.22.x', '1.23.x']
+        go-version: ['1.23.x', '1.24.x']
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
@@ -30,23 +24,45 @@ jobs:
       - name: Go mod download
         run: go mod download
 
+      - name: Format gate
+        run: |
+          # gofmt is the one check that needs no explanation and no escape
+          # hatch. It used to be absent here, which is how twelve files ended
+          # up space-indented while CI stayed green.
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::these files are not gofmt-clean:"
+            echo "$unformatted"
+            echo "run: gofmt -w ."
+            exit 1
+          fi
+
       - name: Vet
         run: go vet ./...
 
       - name: Build
         run: go build -o /tmp/hostage .
 
-      - name: Test (if any)
-        run: go test ./... -timeout 60s || echo "no tests yet"
+      - name: Test
+        # No "|| echo". That line made this step pass unconditionally, so a
+        # failing test and a repo with no tests were indistinguishable in the
+        # UI. resolve_test.go exists now; if it breaks, CI should go red.
+        run: go test ./... -timeout 60s -race -count=1
 
-      - name: Smoke test — version
+      - name: Smoke test, version
         run: /tmp/hostage -V
 
-      - name: Smoke test — fingerprints
+      - name: Smoke test, fingerprints
         run: /tmp/hostage -fingerprints | head -20
 
+      # Proves the resolver accepts what the README tells people to type. It
+      # silently failed on every target before, and the only symptom was a
+      # per-target "probe failed" that reads like a network problem.
+      - name: Smoke test, custom resolver accepts host:port
+        run: /tmp/hostage -dns-server 1.1.1.1:53 -fingerprints | head -5
+
       - name: Upload artifact
-        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.22.x'
+        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23.x'
         uses: actions/upload-artifact@v4
         with:
           name: hostage-build-${{ github.sha }}
@@ -60,8 +76,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.22.x'
-      - uses: golangci/golangci-lint-action@v6
+          go-version: '1.24.x'
+      - uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          # Pinned. The v1 line is built with an older Go than this module
+          # targets and exits with "can't load config" before linting anything,
+          # which is how a red lint job once had nothing to do with the code.
+          version: v2.14.0
           args: --timeout 5m
