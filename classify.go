@@ -73,10 +73,16 @@ func Classify(host string, res *DNSResult, p *ProbeResult) *Finding {
             if bfp.Vulnerable {
                 v = Takeover
             }
+            evidence := fmt.Sprintf("body signature %q (HTTP %d)", truncate(sig.Body, 60), p.Status)
+            // This verdict is derived from the body. If the body was
+            // truncated the signature may not be the reason it matched.
+            if p.BodyErr != "" {
+                evidence += fmt.Sprintf("; body truncated: %s", truncate(p.BodyErr, 80))
+            }
             return &Finding{
                 Host: host, Verdict: v, Service: bfp.Service, CNAME: cname,
                 Chain: res.Chain, IPs: res.IPs, Status: p.Status,
-                Evidence: fmt.Sprintf("body signature %q (HTTP %d)", truncate(sig.Body, 60), p.Status),
+                Evidence: evidence,
                 Note:     bfp.Note, Resolver: res.Resolver,
             }
         }
@@ -144,9 +150,16 @@ func Classify(host string, res *DNSResult, p *ProbeResult) *Finding {
     }
 
     if p != nil && p.OK {
+        // A truncated body means the fingerprint match above ran against
+        // partial content. Keep the Alive verdict but say so, so the reader
+        // does not treat it as a clean full-body confirmation.
+        evidence := fmt.Sprintf("serving content (HTTP %d)", p.Status)
+        if p.BodyErr != "" {
+            evidence += fmt.Sprintf("; body truncated: %s", truncate(p.BodyErr, 80))
+        }
         return &Finding{
             Host: host, Verdict: Alive, CNAME: cname, Chain: res.Chain, IPs: res.IPs,
-            Status: p.Status, Evidence: fmt.Sprintf("serving content (HTTP %d)", p.Status),
+            Status: p.Status, Evidence: evidence,
             Resolver: res.Resolver,
         }
     }

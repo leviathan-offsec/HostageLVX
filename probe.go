@@ -22,6 +22,9 @@ type ProbeResult struct {
     FinalURL string
     Scheme   string
     Err      string
+    // BodyErr is set when the response body could not be read in full. Body
+    // is then partial and fingerprint matching on it is unreliable.
+    BodyErr  string
     Elapsed  time.Duration
 }
 
@@ -51,6 +54,7 @@ func Probe(ctx context.Context, host string, timeout time.Duration) *ProbeResult
     started := time.Now()
     res := &ProbeResult{}
     for _, scheme := range []string{"https", "http"} {
+        var bodyErrMsg string
         ctxReq, cancel := context.WithTimeout(ctx, timeout)
         req, err := http.NewRequestWithContext(ctxReq, http.MethodGet, scheme+"://"+host, nil)
         if err != nil {
@@ -67,13 +71,22 @@ func Probe(ctx context.Context, host string, timeout time.Duration) *ProbeResult
             res.Err = err.Error()
             continue
         }
-        body, _ := io.ReadAll(io.LimitReader(resp.Body, maxBody))
+        // A read error here means the body is truncated. Judging a takeover
+        // fingerprint on a partial body can produce a false verdict, so keep
+        // the successful status but record why the body is incomplete.
+        body, bodyErr := io.ReadAll(io.LimitReader(resp.Body, maxBody))
         resp.Body.Close()
+        if bodyErr != nil {
+            bodyErrMsg = bodyErr.Error()
+        }
 
         res.OK = true
         res.Status = resp.StatusCode
         res.Headers = resp.Header
         res.Body = string(body)
+        if bodyErrMsg != "" {
+            res.BodyErr = bodyErrMsg
+        }
         res.FinalURL = resp.Request.URL.String()
         res.Scheme = scheme
         res.Elapsed = time.Since(started)
