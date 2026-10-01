@@ -38,7 +38,7 @@ func BodyHash(body string) string {
 		return ""
 	}
 	sum := sha256.Sum256([]byte(body))
-	return hex.EncodeToString(sum[:])[: 16]
+	return hex.EncodeToString(sum[:])[:16]
 }
 
 func randNonce(n int) string {
