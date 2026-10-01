@@ -216,5 +216,3 @@ func (r *Resolver) ResolveChain(ctx context.Context, host string) *DNSResult {
 	}
 	return r.systemChain(ctx, host)
 }
-
-func badlyFormatted() {}
