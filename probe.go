@@ -66,16 +66,21 @@ func Probe(ctx context.Context, host string, timeout time.Duration) *ProbeResult
         req.Header.Set("Accept", "*/*")
 
         resp, err := probeClient.Do(req)
-        cancel()
         if err != nil {
+            cancel()
             res.Err = err.Error()
             continue
         }
         // A read error here means the body is truncated. Judging a takeover
         // fingerprint on a partial body can produce a false verdict, so keep
         // the successful status but record why the body is incomplete.
+        //
+        // cancel() must NOT run before the read: the response body is served
+        // on the request context, so cancelling here aborts every subsequent
+        // Read and silently truncates the body to whatever was buffered.
         body, bodyErr := io.ReadAll(io.LimitReader(resp.Body, maxBody))
         resp.Body.Close()
+        cancel()
         if bodyErr != nil {
             bodyErrMsg = bodyErr.Error()
         }
