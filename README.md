@@ -216,6 +216,7 @@ hostage -fingerprints
 | `-silent` | `false` | Only print TAKEOVER / LIKELY hits |
 | `-o` | (stdout) | Write findings to file (JSONL with `-json`, text otherwise) |
 | `-fingerprints` | `false` | Print the fingerprint database and exit |
+| `-demo` | `false` | Print a simulated sweep (no network) and exit |
 | `-no-color` | `false` | Disable colored output (auto-disabled when piping) |
 | `-no-wildcard-check` | `false` | Skip wildcard-DNS canary detection (faster, noisier) |
 | `-V` | — | Print version and exit |
