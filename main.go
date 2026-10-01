@@ -45,6 +45,7 @@ func main() {
         silent     = flag.Bool("silent", false, "only print TAKEOVER/LIKELY hits")
         outFile    = flag.String("o", "", "save findings to file (JSONL with -json, text otherwise)")
         showFPs    = flag.Bool("fingerprints", false, "print the fingerprint database and exit")
+        demo       = flag.Bool("demo", false, "offline simulated sweep (no network) and exit")
         noColor    = flag.Bool("no-color", false, "disable colored output")
         noWildcard = flag.Bool("no-wildcard-check", false, "skip wildcard-DNS canary detection")
         showVer    = flag.Bool("V", false, "print version and exit")
@@ -58,6 +59,10 @@ func main() {
     if *showFPs {
         fmt.Printf("hostage v%s - fingerprint database\n\n", version)
         fmt.Println(RenderFingerprints(ColorEnabled(*noColor)))
+        return
+    }
+    if *demo {
+        Demo(ColorEnabled(*noColor))
         return
     }
 

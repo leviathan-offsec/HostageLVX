@@ -42,7 +42,7 @@ var marks = map[Verdict]struct{ mark, color string }{
     Alive:    {"[.]", Green},
     Wildcard: {"[w]", Dim},
     Error:    {"[x]", Dim},
-    NoDNS:    {"[Â·]", Dim},
+    NoDNS:    {"[·]", Dim},
 }
 
 func HotLine(f *Finding, color bool) string {

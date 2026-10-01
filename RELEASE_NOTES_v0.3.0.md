@@ -4,7 +4,7 @@
 
 ## Highlights
 
-- **17 fingerprints** — GitHub Pages, AWS S3, Azure Web Apps, Heroku, Fastly, Shopify, Tumblr, Zendesk, Bitbucket Cloud, Surge.sh, Readme.io, Pantheon, Ghost, Helpjuice, CloudFront, Netlify, Vercel
+- **21 fingerprints** — GitHub Pages, AWS S3, Azure Web Apps, Heroku, Fastly, Shopify, Tumblr, Zendesk, Bitbucket Cloud, Surge.sh, Readme.io, Pantheon, Ghost, Helpjuice, CloudFront, Netlify, Vercel, Google Cloud Storage, DigitalOcean Spaces, Firebase Hosting, Webflow
 - **Wildcard DNS canary detection** — auto-identifies parking-page noise and nulls it, dramatically reducing false positives
 - **DoH-first resolver** — DNS-over-HTTPS by default, falls back to system resolver or custom UDP server
 - **Multi-label TLD awareness** — correctly resolves parent zones for `co.uk`, `com.au`, `co.jp`, etc.

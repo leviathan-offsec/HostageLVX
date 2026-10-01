@@ -40,31 +40,35 @@
 
 ## Live TUI demo
 
-```text
-$ ./scripts/live-demo.sh
+Simulated sweep, printed by the binary itself. It resolves nothing and
+sends no requests — every host is a reserved `example.com` name.
 
-    __  ______  ______________   ____________
+```text
+$ ./hostage -demo
+__  ______  ______________   ____________
    / / / / __ \/ ___/_  __/   | / ____/ ____/
   / /_/ / / / /\__ \ / / / /| |/ / __/ __/
  / __  / /_/ /___/ // / / ___ / /_/ / /___
-/_/ /_/\____//____//_/ /_/  |_|\____/_____/ 
+/_/ /_/\____//____//_/ /_/  |_|\____/_____/
 
   LEVIATHAN.AC // HOSTAGE LVX
-  RAPID TAKEOVER CHECK
+  RAPID TAKEOVER CHECK (SIMULATED — no requests sent)
 
-  scanned  6   alive  3   takeovers  2   likely  1
-  api.example.com             ALIVE      nginx
-  admin.example.com          TAKEOVER   Heroku  ↠ live
-  legacy.example.com         TAKEOVER   CloudFront
-  staging.example.com         LIKELY     generic
-  cdn.example.com             NO_DNS
-  shop.example.com            ALIVE      Cloudflare
+  scanned  6    alive  5    takeovers  2    likely  1  
 
-  last event · admin.example.com · takeover · Heroku
-  [q] quit
+  api.example.com           ALIVE      nginx                 
+  admin.example.com         TAKEOVER   Heroku  live          
+  legacy.example.com        TAKEOVER   CloudFront            
+  staging.example.com       LIKELY     generic               
+  cdn.example.com           NO_DNS                           
+  shop.example.com          ALIVE      Cloudflare            
+
+  last event · admin.example.com · TAKEOVER · Heroku
+  offline simulation — this is not a scan result
 ```
 
-This is the same rapid-swarm interface shipped with `hostage -demo` and `./scripts/live-demo.sh`, tuned for a brutalist Leviathan operator console.
+`scripts/live-demo.sh` builds the binary, records the demo with `asciinema`
+when it is installed, and otherwise just runs `-demo` directly.
 
 This project is built for the same lane as high-end recon tooling, but with a tighter focus on takeovers that matter: noisy results stripped down, valid findings surfaced harder, and the console kept brutal and readable.
 
@@ -216,6 +220,7 @@ hostage -fingerprints
 | `-silent` | `false` | Only print TAKEOVER / LIKELY hits |
 | `-o` | (stdout) | Write findings to file (JSONL with `-json`, text otherwise) |
 | `-fingerprints` | `false` | Print the fingerprint database and exit |
+| `-demo` | `false` | Print a simulated sweep (no network) and exit |
 | `-no-color` | `false` | Disable colored output (auto-disabled when piping) |
 | `-no-wildcard-check` | `false` | Skip wildcard-DNS canary detection (faster, noisier) |
 | `-V` | — | Print version and exit |
