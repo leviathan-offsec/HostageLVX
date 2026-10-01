@@ -1,0 +1,31 @@
+# Line endings are normalised in the repository and checked out as LF.
+#
+# This is not a style preference. On a Windows checkout without this file, git
+# converts every .go file to CRLF, gofmt then reports the whole tree as
+# unformatted, and a diff touches every line while hiding the real edit. The
+# format gate in ci.yml caught exactly that: green on Linux and macOS, every
+# file listed on Windows, with no genuine formatting problem anywhere.
+#
+# The same applies in reverse. An edit made on Windows and committed without
+# this file arrives with CRLF committed into the repository, and gofmt flags
+# every line of it on every platform afterward.
+
+* text=auto eol=lf
+
+*.go   text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.sh   text eol=lf
+
+# Binaries. text=auto must not touch these, and the release artifacts are
+# built rather than committed, so there is nothing to mark here yet. Kept
+# explicit so adding a committed binary later does not silently corrupt it.
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.exe  binary
+*.zip  binary
+*.gz   binary
+*.db   binary
