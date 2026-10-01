@@ -2,8 +2,12 @@
 hostage
 HostageLVX
 hostage.exe
+hostage-ci
+hostage-ci.exe
 /HostageLVX
 /hostage
+/hostage-ci
+/hostage-ci.exe
 hostage-linux-amd64
 hostage-windows-amd64.exe
 hostage-darwin-arm64

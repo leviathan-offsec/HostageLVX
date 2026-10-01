@@ -48,33 +48,44 @@ jobs:
       - name: Vet
         run: go vet ./...
 
-      - name: Build
-        run: go build -o /tmp/hostage .
-
       - name: Test
         # No "|| echo". That line made this step pass unconditionally, so a
         # failing test and a repo with no tests were indistinguishable in the
         # UI. resolve_test.go exists now; if it breaks, CI should go red.
         run: go test ./... -timeout 60s -race -count=1
 
+      # Every step below goes through `go run` rather than building to a path
+      # and invoking it. The old workflow used "/tmp/hostage", which works on
+      # Linux and macOS and silently breaks on Windows: PowerShell reads
+      # "/tmp/hostage" as a rooted path, drops the leading slash, and looks for
+      # D:\a\HostageLVX\HostageLVX. Build and invoke then disagree about where
+      # the binary is, and the step dies with "the system cannot find the file
+      # specified" while the build above it reported success. `go run` has no
+      # path to get wrong, so this cannot drift per-platform again.
       - name: Smoke test, version
-        run: /tmp/hostage -V
+        run: go run . -V
 
       - name: Smoke test, fingerprints
-        run: /tmp/hostage -fingerprints | head -20
+        run: go run . -fingerprints | head -20
 
       # Proves the resolver accepts what the README tells people to type. It
       # silently failed on every target before, and the only symptom was a
       # per-target "probe failed" that reads like a network problem.
       - name: Smoke test, custom resolver accepts host:port
-        run: /tmp/hostage -dns-server 1.1.1.1:53 -fingerprints | head -5
+        run: go run . -dns-server 1.1.1.1:53 -fingerprints | head -5
+
+      # Built separately from the smoke tests, into the workspace rather than
+      # /tmp, so the uploaded path is one Windows and POSIX agree on.
+      - name: Build upload artifact
+        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23.x'
+        run: go build -o ./hostage-ci .
 
       - name: Upload artifact
         if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23.x'
         uses: actions/upload-artifact@v4
         with:
           name: hostage-build-${{ github.sha }}
-          path: /tmp/hostage
+          path: ./hostage-ci
           retention-days: 7
 
   lint:
