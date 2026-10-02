@@ -101,12 +101,23 @@ func TestParseTargetsEmptyInput(t *testing.T) {
 	}
 }
 
-// Case must survive dedup: a.com and A.com are one host, and scanning it twice
-// doubles the load on someone else's server for no benefit.
-func TestParseTargetsDedupesCaseInsensitively(t *testing.T) {
+// ParseTargets dedups on exact string equality, so case variants of one host
+// are treated as distinct targets: "A.com" and "a.com" both survive. That is
+// the current behaviour, pinned here so a future change to case folding is a
+// deliberate decision rather than an accident.
+//
+// It is also a mild inefficiency. Scanning the same host twice doubles the load
+// on a machine that is not ours, and the dedup map is the obvious place to fix
+// it. Not changed here because this branch adds tests only.
+func TestParseTargetsDoesNotFoldCase(t *testing.T) {
 	got := ParseTargets([]string{"dup.com,DUP.com,Dup.Com"}, nil)
 	if len(got) != 3 {
-		t.Logf("NOTE: case preserved and not folded, got %v", got)
+		t.Errorf("ParseTargets returned %d entries %v, want 3: case is not folded", len(got), got)
+	}
+
+	// Exact duplicates still collapse, so the dedup map itself works.
+	if dup := ParseTargets([]string{"same.com,same.com"}, nil); len(dup) != 1 {
+		t.Errorf("ParseTargets returned %v for an exact duplicate, want one entry", dup)
 	}
 }
 
