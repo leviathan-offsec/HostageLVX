@@ -84,11 +84,19 @@ func TestRandNonceShape(t *testing.T) {
 		t.Fatalf("randNonce(%d) length = %d, want %d (%q)", n, len(got), n, got)
 	}
 	for _, r := range got {
-		if !((r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')) {
+		// staticcheck QF1001: De Morgan. Written positively so the failure
+		// message names the rune rather than the negated condition.
+		lower := r >= 'a' && r <= 'z'
+		digit := r >= '0' && r <= '9'
+		if !lower && !digit {
 			t.Fatalf("randNonce produced %q with out-of-charset rune %q", got, r)
 		}
 	}
-	if randNonce(n) == randNonce(n) {
+	// Two calls compared inline reads as a tautology (staticcheck SA4000) even
+	// though each call is an independent draw. Bind them first so the intent is
+	// obvious and the check survives a linter.
+	again := randNonce(n)
+	if got == again {
 		t.Error("two nonces came back identical; the canary would be guessable")
 	}
 }
