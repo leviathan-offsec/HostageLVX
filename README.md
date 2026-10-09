@@ -27,7 +27,15 @@ A fast, scope-aware dangling-DNS and takeover engine for real operators.
 
 ## Install
 
-### One-line installer
+### Via Homebrew (macOS & Linux)
+
+```bash
+brew install leviathan-offsec/tap/hostage
+hostage --help
+```
+
+### One-line installer (curl | sh)
+
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/leviathan-offsec/HostageLVX/main/install.sh | sh
